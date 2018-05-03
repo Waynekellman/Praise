@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1019936048222",
+    "firebase_url": "https://praise-40bca.firebaseio.com",
+    "project_id": "praise-40bca",
+    "storage_bucket": "praise-40bca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019936048222:android:b3b883e245dcd901",
+        "android_client_info": {
+          "package_name": "com.nyc.praise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1019936048222-5lvmcomooumflsj4auo2cgmsgj746ubd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nyc.praise",
+            "certificate_hash": "e234df5835700c906183153bd85fa4671553d8c8"
+          }
+        },
+        {
+          "client_id": "1019936048222-4v7g7fetbbno66ch5mbu648g604epvb7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZzjB--hrG6EbWBFGD2SoCTslgS3fB4Ug"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019936048222-4v7g7fetbbno66ch5mbu648g604epvb7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
