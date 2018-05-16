@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nyc.praise.CommentsFragment"
+    android:background="@color/lightYellow"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/praise_message_in_comments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lightYellow"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_android_black_24dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/back"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/praise_message_comment"
+                style="@style/FeedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="My Sister is an awesome person. I'm she is always standing by my side. I hope to be able to get to a plce where I can pay her back for everything she's done."
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/reply_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="Reply"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:layout_marginEnd="20dp"/>
+    <ListView
+        android:id="@+id/replies_to_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+</LinearLayout>

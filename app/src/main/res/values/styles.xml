@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -17,6 +17,7 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_marginBottom">20dp</item>
     </style>
+
     <style name="FeedStyle" parent="TextAppearance.AppCompat">
         <item name="android:gravity">center</item>
         <item name="android:layout_marginTop">20dp</item>
@@ -24,6 +25,7 @@
         <item name="android:layout_marginStart">20dp</item>
         <item name="android:layout_marginEnd">20dp</item>
     </style>
+
     <style name="IconFeedStyle" parent="TextAppearance.AppCompat">
         <item name="android:gravity">center</item>
         <item name="android:layout_marginTop">5dp</item>
@@ -33,4 +35,11 @@
         <item name="android:elevation">10dp</item>
     </style>
 
+    <style name="MyCoolButton">
+        <item name="android:background">@drawable/cool_button_background</item>
+    </style>
+    <style name="HeaderStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">34sp</item>
+    </style>
 </resources>

@@ -6,4 +6,9 @@ package com.nyc.praise;
 
 public class Constants {
     public final static String FEED = "FEED";
+    public final static String LIKES = "likes";
+    public final static String COMMENTS = "comments";
+    public final static String LOCATION = "Location";
+    public final static String LOGIN_SHARED_PREFS_KEY = "login_shared_prefs";
+    public final static String LOGIN_USERNAME = "username";
 }

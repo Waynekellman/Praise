@@ -11,43 +11,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        style="@style/LoginTextStyle"/>
-
+        android:gravity="center"
+        android:textSize="34sp"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="email"
-        style="@style/LoginTextStyle"/>
+        android:gravity="center"
+        android:textSize="34sp"
+        android:text="What's your userName?"/>
     <EditText
+        android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/LoginEditStyle"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="password"
-        style="@style/LoginTextStyle"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/LoginEditStyle"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="password must be at least 6 letters with at least 1 number"
-        style="@style/LoginEditStyle"/>
-
+        android:gravity="center"
+        android:textSize="34sp"
+        android:maxLength="12"/>
     <Button
         android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Login"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="sign up"/>
 
 
 </LinearLayout>

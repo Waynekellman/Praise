@@ -1,0 +1,31 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    tools:context="com.nyc.praise.WritePraiseFragment">
+
+    <Button
+        android:id="@+id/send_praise"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_gravity="end"
+        android:text="send praise"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:elevation="10dp"
+        style="@style/MyCoolButton"/>
+
+    <EditText
+        android:id="@+id/write_praise"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="45dp"
+        android:background="#FFF"
+        android:gravity="top"
+        android:hint="Write your praise here!!" />
+
+</FrameLayout>
