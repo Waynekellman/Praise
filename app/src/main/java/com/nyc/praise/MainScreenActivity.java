@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainScreenActivity extends AppCompatActivity {
+public class MainScreenActivity extends AppCompatActivity implements FragmentNavigater{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,9 +18,11 @@ public class MainScreenActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void switchContent(Fragment frag) {
+    @Override
+    public void SwitchFragment(Fragment fragment) {
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.fragment_feed_container, frag);
+        ft.add(R.id.fragment_feed_container, fragment);
         ft.addToBackStack("");
         ft.commit();
     }

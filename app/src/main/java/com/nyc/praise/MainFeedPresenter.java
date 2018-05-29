@@ -90,7 +90,7 @@ public class MainFeedPresenter {
 
     public void connectMainFeed(final String currentLocation) {
         Log.d(TAG, "connectMainFeed: ran");
-        currentLocationTextView.setText(currentLocation);
+            currentLocationTextView.setText(currentLocation.replace(" County", ""));
         databaseReferenceFeed = FirebaseDatabase.getInstance().getReference();
         praiseFireBaseRecyclerAdapter = new FirebaseRecyclerAdapter<PraiseModel, FireBaseViewHolder>(
                 PraiseModel.class, R.layout.main_feed_itemview, FireBaseViewHolder.class,
@@ -184,9 +184,10 @@ public class MainFeedPresenter {
 
     public void switchContent(Fragment fragment) {
 
+
         if (mainFeedContext.getActivity() instanceof MainScreenActivity) {
-            MainScreenActivity homeActivity = (MainScreenActivity) mainFeedContext.getActivity();
-            homeActivity.switchContent(fragment);
+            FragmentNavigater homeActivity = (FragmentNavigater) this.mainFeedContext.getActivity();
+            homeActivity.SwitchFragment(fragment);
         }
 
     }

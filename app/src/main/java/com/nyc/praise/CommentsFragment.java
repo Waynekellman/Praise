@@ -101,8 +101,8 @@ public class CommentsFragment extends Fragment {
     public void switchContent(Fragment fragment) {
 
         if (this.getActivity() instanceof MainScreenActivity) {
-            MainScreenActivity homeActivity = (MainScreenActivity) this.getActivity();
-            homeActivity.switchContent(fragment);
+            FragmentNavigater homeActivity = (FragmentNavigater) this.getActivity();
+            homeActivity.SwitchFragment(fragment);
         }
 
     }
