@@ -2,13 +2,12 @@ package com.nyc.praise;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.database.DatabaseReference;
 
 
 /**
@@ -16,9 +15,8 @@ import com.google.firebase.database.DatabaseReference;
  */
 public class MainFeed extends Fragment {
 
+    private static final String TAG = "MainFeed";
 
-    private FirebaseListAdapter<PraiseModel> adapter;
-    private DatabaseReference databaseReferenceFeed;
 
     public MainFeed() {
         // Required empty public constructor
@@ -35,8 +33,11 @@ public class MainFeed extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        GPSHelper gpsHelper = new GPSHelper(getActivity());
+        Log.d(TAG, "onViewCreated: ran");
 
+        MainFeedPresenter presenter = new MainFeedPresenter(this, view);
+        presenter.start();
 
     }
+
 }

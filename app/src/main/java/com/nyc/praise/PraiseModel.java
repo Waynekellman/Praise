@@ -7,18 +7,27 @@ import java.util.Map;
  */
 
 public class PraiseModel {
-    long uId;
-    String location;
-    String message;
-    Map<Long, String> likes;
-    Map<Long, String> comments;
-    long date;
+    private String uId;
+    private String location;
+    private String message;
+    private Map<String, Object> likes;
+    private Map<String, Object> comments;
+    private Long date;
+    private String userName;
 
-    public long getuId() {
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getuId() {
         return uId;
     }
 
-    public void setuId(long uId) {
+    public void setuId(String uId) {
         this.uId = uId;
     }
 
@@ -38,27 +47,27 @@ public class PraiseModel {
         this.message = message;
     }
 
-    public Map<Long, String> getLikes() {
+    public Map<String, Object> getLikes() {
         return likes;
     }
 
-    public void setLikes(Map<Long, String> likes) {
+    public void setLikes(Map<String, Object> likes) {
         this.likes = likes;
     }
 
-    public Map<Long, String> getComments() {
+    public Map<String, Object> getComments() {
         return comments;
     }
 
-    public void setComments(Map<Long, String> comments) {
+    public void setComments(Map<String, Object> comments) {
         this.comments = comments;
     }
 
-    public long getDate() {
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 }

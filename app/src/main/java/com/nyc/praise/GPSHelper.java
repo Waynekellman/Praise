@@ -6,7 +6,15 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,15 +24,14 @@ import java.util.Locale;
  * Created by Wayne Kellman on 5/1/18.
  */
 
-public class GPSHelper {
+public class GPSHelper implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String TAG = "GPSHelper";
     private Context context;
-    // flag for GPS Status
-    private boolean isGPSEnabled = false;
-    // flag for network status
-    private boolean isNetworkEnabled = false;
     private LocationManager locationManager;
     private Location location;
+    private LocationInterface locationInterface;
     private double latitude;
     private double longitude;
 
@@ -36,35 +43,21 @@ public class GPSHelper {
 
     }
 
-    public String getMyLocation() {
-        List<String> providers = locationManager.getProviders(true);
 
-        Location l = null;
-        for (int i = 0; i < providers.size(); i++) {
-            if (ActivityCompat.checkSelfPermission(context.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                    ActivityCompat.checkSelfPermission(context.getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((MainScreenActivity) context, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1020);
-            }
-            l = locationManager.getLastKnownLocation(providers.get(i));
-            if (l != null)
-                break;
-        }
-        if (l != null) {
-            latitude = l.getLatitude();
-            longitude = l.getLongitude();
-        }
-        return getLocationName();
+    public void setLocationInterface(LocationInterface locationInterface) {
+        this.locationInterface = locationInterface;
     }
-
-    public boolean isGPSenabled() {
-        isGPSEnabled = locationManager
-                .isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-        // getting network status
-        isNetworkEnabled = locationManager
-                .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        return (isGPSEnabled || isNetworkEnabled);
+    public void getMyLocation() {
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(context)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
     }
 
     /**
@@ -81,7 +74,7 @@ public class GPSHelper {
         return longitude;
     }
 
-    private String getLocationName() {
+    public String getLocationName() {
 
         String cityName = "Not Found";
         Geocoder gcd = new Geocoder(context, Locale.getDefault());
@@ -93,12 +86,12 @@ public class GPSHelper {
             for (Address adrs : addresses) {
                 if (adrs != null) {
 
-                    String city = adrs.getLocality();
+                    String city = adrs.getSubAdminArea();
+
+                    System.out.println("city ::  " + cityName);
                     if (city != null && !city.equals("")) {
                         cityName = city;
                         System.out.println("city ::  " + cityName);
-                    } else {
-
                     }
                     // // you should also try with addresses.get(0).toSring();
 
@@ -108,7 +101,44 @@ public class GPSHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Log.d(TAG, "onConnected: location name " + cityName);
         return cityName;
 
+    }
+
+
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(context.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(context.getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((MainScreenActivity) context, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1020);
+        }
+
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            latitude = mLastLocation.getLatitude();
+
+            longitude = mLastLocation.getLongitude();
+            locationInterface.onSuccessLocation(getLocationName());
+            Log.d(TAG, "onConnected: lat: "+ latitude + ", long: " + longitude);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
+    }
+
+    interface LocationInterface {
+        void onSuccessLocation(String currentLocation);
     }
 }
