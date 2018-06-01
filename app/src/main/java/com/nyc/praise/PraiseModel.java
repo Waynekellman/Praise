@@ -14,6 +14,8 @@ public class PraiseModel {
     private Map<String, Object> comments;
     private Long date;
     private String userName;
+    private int iconResource;
+    private int colorResource;
 
     public String getUserName() {
         return userName;
@@ -69,5 +71,21 @@ public class PraiseModel {
 
     public void setDate(Long date) {
         this.date = date;
+    }
+
+    public int getIconResource() {
+        return iconResource;
+    }
+
+    public void setIconResource(int iconResource) {
+        this.iconResource = iconResource;
+    }
+
+    public int getColorResource() {
+        return colorResource;
+    }
+
+    public void setColorResource(int colorResource) {
+        this.colorResource = colorResource;
     }
 }

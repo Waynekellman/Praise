@@ -1,5 +1,9 @@
 package com.nyc.praise;
 
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class FireBaseViewHolder extends RecyclerView.ViewHolder {
 
     private TextView likeCount, commentsCount, praiseMessage, userNameMainFeed, elapsedTime;
-    ImageView likeImg, commentImg;
+    ImageView likeImg, commentImg, iconImg;
 
 
     public FireBaseViewHolder(View itemView) {
@@ -26,6 +30,7 @@ public class FireBaseViewHolder extends RecyclerView.ViewHolder {
         commentImg = itemView.findViewById(R.id.comments_icon);
         userNameMainFeed = itemView.findViewById(R.id.user_name_main_feed);
         elapsedTime = itemView.findViewById(R.id.elapsed_time);
+        iconImg = itemView.findViewById(R.id.praise_icon);
     }
 
     public void OnBind(PraiseModel model) {
@@ -48,6 +53,10 @@ public class FireBaseViewHolder extends RecyclerView.ViewHolder {
             if (model.getDate() != null) {
                 long timeStamp = System.currentTimeMillis() - model.getDate();
                 elapsedTime.setText(getElapsedTimeMinutesSecondsString((int) timeStamp));
+            }
+            if (model.getIconResource() > 0) {
+                iconImg.setColorFilter(ContextCompat.getColor(itemView.getContext(), model.getColorResource()), PorterDuff.Mode.SRC_ATOP);
+                iconImg.setImageResource(model.getIconResource());
             }
 
             praiseMessage.setText(model.getMessage());

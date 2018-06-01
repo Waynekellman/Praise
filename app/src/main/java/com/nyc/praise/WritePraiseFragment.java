@@ -122,7 +122,11 @@ public class WritePraiseFragment extends Fragment {
         model.setLikes(null);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.LOGIN_SHARED_PREFS_KEY,Context.MODE_PRIVATE);
         String userName = sharedPreferences.getString(Constants.LOGIN_USERNAME, "");
+        int iconRec = sharedPreferences.getInt(Constants.ICON, -1);
+        int colorRec = sharedPreferences.getInt(Constants.COLOR, -1);
         if (!userName.isEmpty()) model.setUserName(userName);
+        if (iconRec != -1) model.setIconResource(iconRec);
+        if (colorRec != -1) model.setColorResource(colorRec);
         return model;
     }
 }
