@@ -4,10 +4,12 @@ package com.nyc.praise;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,6 +38,7 @@ public class CommentsFragment extends Fragment {
     ListView comments;
     DatabaseReference commentsReference;
     TextView reply;
+    ImageView icon;
 
     public CommentsFragment() {
         // Required empty public constructor
@@ -52,6 +55,7 @@ public class CommentsFragment extends Fragment {
         praise = view.findViewById(R.id.praise_message_comment);
         comments = view.findViewById(R.id.replies_to_comment);
         reply = view.findViewById(R.id.reply_text);
+        icon = view.findViewById(R.id.icon_message);
         return view;
     }
 
@@ -59,6 +63,8 @@ public class CommentsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         praise.setText(model.getMessage());
+        icon.setImageResource(model.getIconResource());
+        icon.setColorFilter(ContextCompat.getColor(getActivity(), model.getColorResource()), android.graphics.PorterDuff.Mode.MULTIPLY);;
         reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -90,7 +90,7 @@ public class MainFeedPresenter {
 
     public void connectMainFeed(final String currentLocation) {
         Log.d(TAG, "connectMainFeed: ran");
-            currentLocationTextView.setText(currentLocation.replace(" County", ""));
+        currentLocationTextView.setText(currentLocation.replace(" County", ""));
         databaseReferenceFeed = FirebaseDatabase.getInstance().getReference();
         praiseFireBaseRecyclerAdapter = new FirebaseRecyclerAdapter<PraiseModel, FireBaseViewHolder>(
                 PraiseModel.class, R.layout.main_feed_itemview, FireBaseViewHolder.class,
