@@ -14,15 +14,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -65,16 +59,13 @@ public class CommentsFragment extends Fragment {
         praise.setText(model.getMessage());
         icon.setImageResource(model.getIconResource());
         icon.setColorFilter(ContextCompat.getColor(getActivity(), model.getColorResource()), android.graphics.PorterDuff.Mode.MULTIPLY);;
-        reply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                WritePraiseFragment newComment = new WritePraiseFragment();
-                String modelJsonString = new Gson().toJson(model);
-                Bundle bundle = new Bundle();
-                bundle.putString("jsonModel", modelJsonString);
-                newComment.setArguments(bundle);
-                switchContent(newComment);
-            }
+        reply.setOnClickListener(view1 -> {
+            WritePraiseFragment newComment = new WritePraiseFragment();
+            String modelJsonString = new Gson().toJson(model);
+            Bundle bundle = new Bundle();
+            bundle.putString("jsonModel", modelJsonString);
+            newComment.setArguments(bundle);
+            switchContent(newComment);
         });
         Log.d(TAG, "onViewCreated: ran");
         Log.d(TAG, "onViewCreated: location " + model.getLocation());
@@ -107,7 +98,7 @@ public class CommentsFragment extends Fragment {
     public void switchContent(Fragment fragment) {
 
         if (this.getActivity() instanceof MainScreenActivity) {
-            FragmentNavigater homeActivity = (FragmentNavigater) this.getActivity();
+            FragmentNavigator homeActivity = (FragmentNavigator) this.getActivity();
             homeActivity.SwitchFragment(fragment);
         }
 

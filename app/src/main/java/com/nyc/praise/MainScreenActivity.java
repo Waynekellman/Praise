@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainScreenActivity extends AppCompatActivity implements FragmentNavigater{
+public class MainScreenActivity extends AppCompatActivity implements FragmentNavigator {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
