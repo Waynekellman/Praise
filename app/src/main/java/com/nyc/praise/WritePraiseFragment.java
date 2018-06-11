@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,9 @@ public class WritePraiseFragment extends Fragment {
     Button sendPraise;
     String currentLocation;
     PraiseModel model;
+    private static final String TAG = "WritePraiseFragment";
+    boolean isPraise;
+    private String SAVED_DRAFT;
 
     public WritePraiseFragment() {
         // Required empty public constructor
@@ -52,55 +56,96 @@ public class WritePraiseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
-        boolean isPraise = bundle.getBoolean("NewPraise");
+        if (savedInstanceState != null) {
+            writePraise.setText(savedInstanceState.getString(SAVED_DRAFT,""));
+        }
+        isPraise = bundle.getBoolean("NewPraise");
         if (isPraise) {
             currentLocation = bundle.getString(Constants.LOCATION, "");
-            sendPraise.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (checkUserName()) {
-                        if (isLocationFound()) {
-                            DatabaseReference updatePost = FirebaseDatabase.getInstance().getReference()
-                                    .child(Constants.FEED)
-                                    .child(currentLocation);
-                            String key = updatePost.push().getKey();
-                            PraiseModel model = createModel(key);
-                            updatePost.child(key).setValue(model);
+            sendPraise.setOnClickListener(view1 -> {
+                sendPraise.setEnabled(false);
+                PraiseToneAnalyzer toneAnalyzer  = new PraiseToneAnalyzer();
+                toneAnalyzer.serviceCall(writePraise.getText().toString(), isToneGood -> {
+                    if (isToneGood) {
 
-                        } else {
-                            Toast.makeText(getActivity(), "location could not be found", Toast.LENGTH_LONG).show();
+                        if (checkUserName()) {
+                            if (isLocationFound()) {
+                                DatabaseReference updatePost = getDatabaseReferenceForPraise();
+                                String key = updatePost.push().getKey();
+                                PraiseModel model = createModel(key);
+                                updatePost.child(key).setValue(model);
+
+                            } else {
+                                getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), "location could not be found", Toast.LENGTH_LONG).show());
+                            }
+
                         }
-                        getActivity().getSupportFragmentManager().beginTransaction().remove(WritePraiseFragment.this).commit();
+                    } else {
+                        getActivity().runOnUiThread(() -> Toast.makeText(getActivity(),"Try to make to post nicer", Toast.LENGTH_LONG).show());
 
                     }
-                }
+                    getActivity().getSupportFragmentManager().beginTransaction().remove(WritePraiseFragment.this).commit();
+                });
             });
         } else {
             model = new Gson().fromJson(bundle.getString("jsonModel"), PraiseModel.class);
             sendPraise.setText("send reply");
-            sendPraise.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DatabaseReference commentsReference = FirebaseDatabase.getInstance().getReference()
-                            .child(Constants.FEED)
-                            .child(model.getLocation())
-                            .child(model.getuId())
-                            .child(Constants.COMMENTS);
-                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.LOGIN_SHARED_PREFS_KEY, Context.MODE_PRIVATE);
-                    String userName = sharedPreferences.getString(Constants.LOGIN_USERNAME, "");
-                    if (!userName.isEmpty()) {
-                        CommentModel commentModel = new CommentModel();
-                        commentModel.setName(userName);
-                        commentModel.setComment(writePraise.getText().toString());
-                        commentsReference.push().setValue(commentModel);
-                    }
-                    getActivity().getSupportFragmentManager().beginTransaction().remove(WritePraiseFragment.this).commit();
+            sendPraise.setOnClickListener(view12 -> {
+                sendPraise.setEnabled(false);
+                PraiseToneAnalyzer toneAnalyzer  = new PraiseToneAnalyzer();
+                toneAnalyzer.serviceCall(writePraise.getText().toString(), isToneGood -> {
+                    if (isToneGood) {
 
-                }
+                        DatabaseReference commentsReference = getDatabaseReferenceForComments();
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.LOGIN_SHARED_PREFS_KEY, Context.MODE_PRIVATE);
+                        String userName = sharedPreferences.getString(Constants.LOGIN_USERNAME, "");
+                        if (!userName.isEmpty()) {
+                            CommentModel commentModel = createCommentModel(userName);
+                            commentsReference.push().setValue(commentModel);
+                        }
+
+                    } else {
+                        getActivity().runOnUiThread(() -> Toast.makeText(getActivity(),"Try to make to comment nicer", Toast.LENGTH_LONG).show());
+                    }
+
+                    getActivity().getSupportFragmentManager().beginTransaction().remove(WritePraiseFragment.this).commit();
+                });
+
             });
         }
 
 
+    }
+
+    private DatabaseReference getDatabaseReferenceForPraise() {
+        return FirebaseDatabase.getInstance().getReference()
+                                    .child(Constants.FEED)
+                                    .child(currentLocation);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (!writePraise.getText().toString().isEmpty()) {
+            SAVED_DRAFT = "SavedDraft";
+            outState.putString(SAVED_DRAFT, writePraise.getText().toString());
+        }
+    }
+
+    @NonNull
+    private CommentModel createCommentModel(String userName) {
+        CommentModel commentModel = new CommentModel();
+        commentModel.setName(userName);
+        commentModel.setComment(writePraise.getText().toString());
+        return commentModel;
+    }
+
+    private DatabaseReference getDatabaseReferenceForComments() {
+        return FirebaseDatabase.getInstance().getReference()
+                            .child(Constants.FEED)
+                            .child(model.getLocation())
+                            .child(model.getuId())
+                            .child(Constants.COMMENTS);
     }
 
     private boolean isLocationFound() {
@@ -120,7 +165,7 @@ public class WritePraiseFragment extends Fragment {
         model.setuId(key);
         model.setComments(null);
         model.setLikes(null);
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.LOGIN_SHARED_PREFS_KEY,Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.LOGIN_SHARED_PREFS_KEY, Context.MODE_PRIVATE);
         String userName = sharedPreferences.getString(Constants.LOGIN_USERNAME, "");
         int iconRec = sharedPreferences.getInt(Constants.ICON, -1);
         int colorRec = sharedPreferences.getInt(Constants.COLOR, -1);

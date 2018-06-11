@@ -67,8 +67,6 @@ public class CommentsFragment extends Fragment {
             newComment.setArguments(bundle);
             switchContent(newComment);
         });
-        Log.d(TAG, "onViewCreated: ran");
-        Log.d(TAG, "onViewCreated: location " + model.getLocation());
 
         commentsReference = FirebaseDatabase.getInstance().getReference();
         commentListAdapter = new FirebaseListAdapter<CommentModel>(
@@ -82,8 +80,6 @@ public class CommentsFragment extends Fragment {
                 TextView commentNameLeft = v.findViewById(R.id.comment_name);
                 String name = model.getName();
                 String comment = model.getComment();
-
-                Log.d(TAG, "populateView: " + position);
                 commentLeft.setText(comment);
                 commentNameLeft.setText(name);
 

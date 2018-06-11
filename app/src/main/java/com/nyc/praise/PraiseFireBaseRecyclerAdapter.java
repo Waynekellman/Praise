@@ -39,10 +39,8 @@ public class PraiseFireBaseRecyclerAdapter extends FirebaseRecyclerAdapter<Prais
     protected void populateViewHolder(FireBaseViewHolder viewHolder, final PraiseModel model, int position) {
 
         viewHolder.OnBind(model);
-        Log.d(TAG, "populateViewHolder: model " + model.getMessage());
         ValueEventListener listenerForLikes = getLikeValueEventListener(model, viewHolder);
         if (model.getuId() != null) {
-            Log.d(TAG, "populateViewHolder: model " + model.getMessage());
             databaseReferenceFeed.child(model.getuId()).child(Constants.LIKES).addValueEventListener(listenerForLikes);
         }
         else {
@@ -82,7 +80,6 @@ public class PraiseFireBaseRecyclerAdapter extends FirebaseRecyclerAdapter<Prais
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String likeCountSnapshot = dataSnapshot.getChildrenCount() + "";
-                Log.d(TAG, "onDataChange: likes count " + likeCountSnapshot);
                 Map<String, String> UsersWhoLiked = createMapOfLikesBYUser(dataSnapshot);
 
                 setLikeButtonEnabledStatus(UsersWhoLiked, model, viewHolder);
@@ -96,13 +93,7 @@ public class PraiseFireBaseRecyclerAdapter extends FirebaseRecyclerAdapter<Prais
     }
 
     private void setLikeButtonEnabledStatus(Map<String, String> usersWhoLiked, final PraiseModel model, final FireBaseViewHolder viewHolder) {
-        Log.d(TAG, "setLikeButtonEnabledStatus: model " + model.getMessage());
-        Log.d(TAG, "setLikeButtonEnabledStatus: ran");
         if (usersWhoLiked.containsKey(USER_NAME)) {
-            for (String namesInMap : usersWhoLiked.keySet()) {
-                Log.d(TAG, "setLikeButtonEnabledStatus: " + namesInMap);
-            }
-            Log.d(TAG, "setLikeButtonEnabledStatus: " + USER_NAME);
             viewHolder.likeImg.setEnabled(false);
         } else {
             viewHolder.likeImg.setEnabled(true);
@@ -117,7 +108,6 @@ public class PraiseFireBaseRecyclerAdapter extends FirebaseRecyclerAdapter<Prais
 
     @NonNull
     private Map<String, String> createMapOfLikesBYUser(DataSnapshot dataSnapshot) {
-        Log.d(TAG, "createMapOfLikesBYUser: ran");
         Map<String, String> UsersWhoLiked = new HashMap<>();
         for (DataSnapshot likeFromDB : dataSnapshot.getChildren()) {
             UsersWhoLiked.put(likeFromDB.getKey(), likeFromDB.getValue().toString());

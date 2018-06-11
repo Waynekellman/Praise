@@ -33,8 +33,6 @@ public class MainFeed extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "onViewCreated: ran");
-
         MainFeedPresenter presenter = new MainFeedPresenter(this, view);
         presenter.start();
 
