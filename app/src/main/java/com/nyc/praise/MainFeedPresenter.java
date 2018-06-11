@@ -70,14 +70,12 @@ public class MainFeedPresenter {
     @NonNull
     private GPSHelper.LocationInterface getLocationInterface() {
         return currentLocation -> {
-            Log.d(TAG, "onSuccessLocation: ran");
             MainFeedPresenter.this.currentLocation = currentLocation;
             connectMainFeed(currentLocation);
         };
     }
 
     public void connectMainFeed(final String currentLocation) {
-        Log.d(TAG, "connectMainFeed: ran");
         currentLocationTextView.setText(currentLocation.replace(" County", ""));
         databaseReferenceFeed = FirebaseDatabase.getInstance().getReference();
 

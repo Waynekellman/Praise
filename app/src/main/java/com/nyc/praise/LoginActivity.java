@@ -29,13 +29,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         colorGroup = findViewById(R.id.color_group);
         login.setOnClickListener(this);
         sharedPreferences = getSharedPreferences(Constants.LOGIN_SHARED_PREFS_KEY, MODE_PRIVATE);
-        Log.d(TAG, "onCreate: ran");
         userName = findViewById(R.id.user_name);
         // set the username for the app.
         if (!sharedPreferences.getString(Constants.LOGIN_USERNAME, "").trim().isEmpty() && sharedPreferences.getInt(Constants.ICON, -1) != -1 && sharedPreferences.getInt(Constants.COLOR, -1) != -1){
             Intent intent = new Intent(LoginActivity.this, MainScreenActivity.class);
             startActivity(intent);
-            Log.d(TAG, "onClick: ran");
         }
     }
 
@@ -47,23 +45,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (checkUserName() && checkIcon() && checkColor()) {
                     saveIconAndColor();
                     setUsernameInSharedPrefs();
+                    clearLogin();
                     Intent intent = new Intent(LoginActivity.this, MainScreenActivity.class);
                     startActivity(intent);
-                    Log.d(TAG, "onClick: ran");
                     break;
                 } else {
-                    if (checkUserName()) {
+                    if (!checkUserName()) {
                         Toast.makeText(LoginActivity.this, "User name must be 6 characters or more", Toast.LENGTH_SHORT).show();
                     }
-                    if (checkIcon()) {
+                    if (!checkIcon()) {
                         Toast.makeText(LoginActivity.this, "Please Select an Icon", Toast.LENGTH_SHORT).show();
                     }
-                    if (checkColor()) {
+                    if (!checkColor()) {
                         Toast.makeText(LoginActivity.this, "Please Select a color", Toast.LENGTH_SHORT).show();
 
                     }
                 }
         }
+    }
+
+    private void clearLogin() {
+        colorGroup.clearCheck();
+        iconGroup.clearCheck();
+        userName.setText("");
     }
 
     private boolean checkColor() {

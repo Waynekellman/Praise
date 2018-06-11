@@ -88,10 +88,8 @@ public class GPSHelper implements
 
                     String city = adrs.getSubAdminArea();
 
-                    System.out.println("city ::  " + cityName);
                     if (city != null && !city.equals("")) {
                         cityName = city;
-                        System.out.println("city ::  " + cityName);
                     }
                     // // you should also try with addresses.get(0).toSring();
 
@@ -102,7 +100,6 @@ public class GPSHelper implements
             e.printStackTrace();
         }
 
-        Log.d(TAG, "onConnected: location name " + cityName);
         return cityName;
 
     }
@@ -125,7 +122,6 @@ public class GPSHelper implements
 
             longitude = mLastLocation.getLongitude();
             locationInterface.onSuccessLocation(getLocationName());
-            Log.d(TAG, "onConnected: lat: "+ latitude + ", long: " + longitude);
         }
     }
 
@@ -135,7 +131,6 @@ public class GPSHelper implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
     }
 
     interface LocationInterface {
