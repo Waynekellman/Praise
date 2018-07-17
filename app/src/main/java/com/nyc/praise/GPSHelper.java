@@ -125,6 +125,10 @@ public class GPSHelper implements
         }
     }
 
+    public void disconnect(){
+        mGoogleApiClient.disconnect();
+    }
+
     @Override
     public void onConnectionSuspended(int i) {
     }
