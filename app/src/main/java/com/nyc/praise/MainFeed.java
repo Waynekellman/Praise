@@ -41,6 +41,9 @@ public class MainFeed extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager mLayoutManager;
     private MainFeedPresenter presenter;
+    private int position = 0;
+    boolean wentThroughOrientationChange = false;
+    String ORIENTATION_STATE = "orientation state";
 
 
     public MainFeed() {
@@ -58,6 +61,9 @@ public class MainFeed extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null){
+            wentThroughOrientationChange = savedInstanceState.getBoolean(ORIENTATION_STATE, false);
+        }
         this.view = view;
         currentLocationTextView = view.findViewById(R.id.current_location);
         sendPraise = view.findViewById(R.id.write_praise);
@@ -91,6 +97,13 @@ public class MainFeed extends Fragment {
         switchContent(fragment);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(ORIENTATION_STATE, true);
+    }
+
     public void connectMainFeed(final String currentLocation) {
         this.currentLocation = currentLocation;
 
@@ -109,6 +122,9 @@ public class MainFeed extends Fragment {
         recyclerView = view.findViewById(R.id.main_feed_recycler);
         recyclerView.setAdapter(praiseFireBaseRecyclerAdapter);
         recyclerView.setLayoutManager(mLayoutManager);
+        if (!wentThroughOrientationChange) {
+            recyclerView.scrollToPosition(position);
+        }
     }
 
     @NonNull

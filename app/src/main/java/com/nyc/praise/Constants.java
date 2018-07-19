@@ -13,4 +13,5 @@ public class Constants {
     public final static String LOGIN_USERNAME = "username";
     public final static String ICON = "icon_shared_key";
     public final static String COLOR = "color_shared_key";
+    public final static String NOT_FOUND = "Not Found";
 }

@@ -13,21 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.Map;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WritePraiseFragment extends Fragment {
+public class WritePraiseFragment extends Fragment implements ToneValidator {
 
     EditText writePraise;
     Button sendPraise;
@@ -36,6 +32,7 @@ public class WritePraiseFragment extends Fragment {
     private static final String TAG = "WritePraiseFragment";
     boolean isPraise;
     private String SAVED_DRAFT;
+    private WritePraisePresenter presentner;
 
     public WritePraiseFragment() {
         // Required empty public constructor
@@ -57,70 +54,31 @@ public class WritePraiseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
         if (savedInstanceState != null) {
-            writePraise.setText(savedInstanceState.getString(SAVED_DRAFT,""));
+            writePraise.setText(savedInstanceState.getString(SAVED_DRAFT, ""));
         }
+
         isPraise = bundle.getBoolean("NewPraise");
+        presentner = new WritePraisePresenter(this);
+
         if (isPraise) {
             currentLocation = bundle.getString(Constants.LOCATION, "");
             sendPraise.setOnClickListener(view1 -> {
                 sendPraise.setEnabled(false);
-                PraiseToneAnalyzer toneAnalyzer  = new PraiseToneAnalyzer();
-                toneAnalyzer.serviceCall(writePraise.getText().toString(), isToneGood -> {
-                    if (isToneGood) {
-
-                        if (checkUserName()) {
-                            if (isLocationFound()) {
-                                DatabaseReference updatePost = getDatabaseReferenceForPraise();
-                                String key = updatePost.push().getKey();
-                                PraiseModel model = createModel(key);
-                                updatePost.child(key).setValue(model);
-
-                            } else {
-                                getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), "location could not be found", Toast.LENGTH_LONG).show());
-                            }
-
-                        }
-                    } else {
-                        getActivity().runOnUiThread(() -> Toast.makeText(getActivity(),"Try to make to post nicer", Toast.LENGTH_LONG).show());
-
-                    }
-                    getActivity().getSupportFragmentManager().beginTransaction().remove(WritePraiseFragment.this).commit();
-                });
+                presentner.analyzePraiseTone(writePraise.getText().toString(), currentLocation);
+                Log.d(TAG, "onViewCreated: praise clicked");
             });
         } else {
             model = new Gson().fromJson(bundle.getString("jsonModel"), PraiseModel.class);
-            sendPraise.setText("send reply");
+            sendPraise.setText(R.string.reply);
             sendPraise.setOnClickListener(view12 -> {
                 sendPraise.setEnabled(false);
-                PraiseToneAnalyzer toneAnalyzer  = new PraiseToneAnalyzer();
-                toneAnalyzer.serviceCall(writePraise.getText().toString(), isToneGood -> {
-                    if (isToneGood) {
-
-                        DatabaseReference commentsReference = getDatabaseReferenceForComments();
-                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.LOGIN_SHARED_PREFS_KEY, Context.MODE_PRIVATE);
-                        String userName = sharedPreferences.getString(Constants.LOGIN_USERNAME, "");
-                        if (!userName.isEmpty()) {
-                            CommentModel commentModel = createCommentModel(userName);
-                            commentsReference.push().setValue(commentModel);
-                        }
-
-                    } else {
-                        getActivity().runOnUiThread(() -> Toast.makeText(getActivity(),"Try to make to comment nicer", Toast.LENGTH_LONG).show());
-                    }
-
-                    getActivity().getSupportFragmentManager().beginTransaction().remove(WritePraiseFragment.this).commit();
-                });
-
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.LOGIN_SHARED_PREFS_KEY, Context.MODE_PRIVATE);
+                String userName = sharedPreferences.getString(Constants.LOGIN_USERNAME, "");
+                presentner.analyzeCommentTone(model,writePraise.getText().toString(), userName);
             });
         }
 
 
-    }
-
-    private DatabaseReference getDatabaseReferenceForPraise() {
-        return FirebaseDatabase.getInstance().getReference()
-                                    .child(Constants.FEED)
-                                    .child(currentLocation);
     }
 
     @Override
@@ -132,32 +90,38 @@ public class WritePraiseFragment extends Fragment {
         }
     }
 
-    @NonNull
-    private CommentModel createCommentModel(String userName) {
-        CommentModel commentModel = new CommentModel();
-        commentModel.setName(userName);
-        commentModel.setComment(writePraise.getText().toString());
-        return commentModel;
+    @Override
+    public void locationFailed() {
+
+        getActivity().runOnUiThread(() ->
+                Toast.makeText(getActivity(), "No Location", Toast.LENGTH_LONG).show());
     }
 
-    private DatabaseReference getDatabaseReferenceForComments() {
-        return FirebaseDatabase.getInstance().getReference()
-                            .child(Constants.FEED)
-                            .child(model.getLocation())
-                            .child(model.getuId())
-                            .child(Constants.COMMENTS);
+    @Override
+    public void textIsEmpty() {
+
+        getActivity().runOnUiThread(() ->
+                Toast.makeText(getActivity(), "Write something nice!", Toast.LENGTH_LONG).show());
     }
 
-    private boolean isLocationFound() {
-        return !currentLocation.equals("Not Found");
+    @Override
+    public void toneValid() {
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .remove(WritePraiseFragment.this)
+                .commit();
+
     }
 
-    private boolean checkUserName() {
-        return !writePraise.getText().toString().isEmpty();
+    @Override
+    public void toneInvalid() {
+        getActivity().runOnUiThread(() ->
+                Toast.makeText(getActivity(), "Try to make to comment nicer", Toast.LENGTH_LONG).show());
     }
 
-    @NonNull
-    private PraiseModel createModel(String key) {
+    @Override
+    public PraiseModel getPraiseModel(String key) {
+
         PraiseModel model = new PraiseModel();
         model.setMessage(writePraise.getText().toString());
         model.setDate(System.currentTimeMillis());
@@ -172,6 +136,6 @@ public class WritePraiseFragment extends Fragment {
         if (!userName.isEmpty()) model.setUserName(userName);
         if (iconRec != -1) model.setIconResource(iconRec);
         if (colorRec != -1) model.setColorResource(colorRec);
-        return model;
+        return null;
     }
 }

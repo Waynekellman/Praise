@@ -22,14 +22,14 @@ class LoginPresenter {
         if (isColorSelected && isIconSelected && isNameValid){
             view.navigateToMainScreen();
         }
-        if (isColorSelected){
-            view.failColor();
+        if (!isNameValid){
+            view.failName();
         }
-        if (isIconSelected){
+        if (!isIconSelected){
             view.failIcon();
         }
-        if (isNameValid){
-            view.failName();
+        if (!isColorSelected){
+            view.failColor();
         }
     }
 }

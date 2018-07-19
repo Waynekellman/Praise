@@ -76,7 +76,7 @@ public class GPSHelper implements
 
     public String getLocationName() {
 
-        String cityName = "Not Found";
+        String cityName = Constants.NOT_FOUND;
         Geocoder gcd = new Geocoder(context, Locale.getDefault());
         try {
 
