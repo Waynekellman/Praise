@@ -1,7 +1,5 @@
 package com.nyc.praise;
 
-import android.util.Log;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -12,7 +10,6 @@ import com.google.firebase.database.FirebaseDatabase;
 class WritePraisePresenter {
     private ToneValidator toneValidator;
     private PraiseToneAnalyzer toneAnalyzer;
-    private String TAG = WritePraisePresenter.class.getSimpleName();
 
     public WritePraisePresenter(ToneValidator toneValidator) {
         this.toneValidator = toneValidator;
@@ -20,7 +17,6 @@ class WritePraisePresenter {
     }
 
     public void analyzePraiseTone(String text, String currentLocation) {
-        Log.d(TAG, "analyzePraiseTone: " + currentLocation);
         if (!text.isEmpty()) {
             toneAnalyzer.serviceCall(text, isToneGood -> writeToPraiseDatabase(currentLocation, isToneGood));
         }
@@ -28,17 +24,14 @@ class WritePraisePresenter {
     }
 
     private void writeToPraiseDatabase(String currentLocation, boolean isToneGood) {
-        Log.d(TAG, "writeToPraiseDatabase: called");
         if (isToneGood) {
             DatabaseReference updatePost = getDatabaseReferenceForPraise(currentLocation);
             String key = updatePost.push().getKey();
             PraiseModel model = toneValidator.getPraiseModel(key);
             updatePost.child(key).setValue(model);
-            Log.d(TAG, "writeToPraiseDatabase: praise posted");
             toneValidator.toneValid();
 
         } else {
-            Log.d(TAG, "writeToPraiseDatabase: call invalid");
             toneValidator.toneInvalid();
 
         }

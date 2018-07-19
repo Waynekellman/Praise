@@ -4,19 +4,14 @@ package com.nyc.praise;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 
@@ -65,7 +60,6 @@ public class WritePraiseFragment extends Fragment implements ToneValidator {
             sendPraise.setOnClickListener(view1 -> {
                 sendPraise.setEnabled(false);
                 presentner.analyzePraiseTone(writePraise.getText().toString(), currentLocation);
-                Log.d(TAG, "onViewCreated: praise clicked");
             });
         } else {
             model = new Gson().fromJson(bundle.getString("jsonModel"), PraiseModel.class);
