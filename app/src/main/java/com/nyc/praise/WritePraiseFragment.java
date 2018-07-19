@@ -136,6 +136,6 @@ public class WritePraiseFragment extends Fragment implements ToneValidator {
         if (!userName.isEmpty()) model.setUserName(userName);
         if (iconRec != -1) model.setIconResource(iconRec);
         if (colorRec != -1) model.setColorResource(colorRec);
-        return null;
+        return model;
     }
 }
