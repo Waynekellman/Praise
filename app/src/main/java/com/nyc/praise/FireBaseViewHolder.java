@@ -2,6 +2,7 @@ package com.nyc.praise;
 
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
+import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -51,7 +52,7 @@ public class FireBaseViewHolder extends RecyclerView.ViewHolder {
                 userNameMainFeed.setText(model.getUserName());
             }
             if (model.getDate() != null) {
-                long timeStamp = System.currentTimeMillis() - model.getDate();
+                long timeStamp = SystemClock.elapsedRealtime() - model.getDate();
                 elapsedTime.setText(getElapsedTimeMinutesSecondsString((int) timeStamp));
             }
             if (model.getIconResource() > 0) {
@@ -65,8 +66,8 @@ public class FireBaseViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public static String getElapsedTimeMinutesSecondsString(int miliseconds) {
-        int elapsedTime = miliseconds;
+    public static String getElapsedTimeMinutesSecondsString(int milliseconds) {
+        int elapsedTime = milliseconds;
         elapsedTime = elapsedTime / 1000;
         int secs = elapsedTime % 60;
         int mins = elapsedTime / 60;

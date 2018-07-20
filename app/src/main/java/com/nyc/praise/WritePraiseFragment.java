@@ -4,6 +4,7 @@ package com.nyc.praise;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -118,7 +119,7 @@ public class WritePraiseFragment extends Fragment implements ToneValidator {
 
         PraiseModel model = new PraiseModel();
         model.setMessage(writePraise.getText().toString());
-        model.setDate(System.currentTimeMillis());
+        model.setDate(SystemClock.elapsedRealtime());
         model.setLocation(currentLocation);
         model.setuId(key);
         model.setComments(null);

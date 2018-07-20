@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.jakewharton.rxbinding2.view.RxView;
 
 
 /**
@@ -107,7 +108,7 @@ public class MainFeed extends Fragment {
     public void connectMainFeed(final String currentLocation) {
         this.currentLocation = currentLocation;
 
-        sendPraise.setOnClickListener(view -> initWritePraiseFrag());
+        RxView.clicks(sendPraise).subscribe(x -> initWritePraiseFrag());
 
         currentLocationTextView.setText(currentLocation.replace(" County", ""));
         databaseReferenceFeed = FirebaseDatabase.getInstance().getReference();
