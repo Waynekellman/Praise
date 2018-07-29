@@ -1,32 +1,65 @@
 package com.nyc.praise;
 
+import android.util.Log;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.inject.Inject;
+
 /**
  * Created by Wayne Kellman on 5/12/18.
  */
 
 public class MainFeedPresenter {
     private GPSHelper gpsHelper;
+    private IMainFeed mainFeed;
+    private String currentLocation;
+    Set<String> locations;
+    private String TAG = MainFeedPresenter.class.getSimpleName();
 
-    private GetLocation locationInterface;
 
-
-    public MainFeedPresenter(GPSHelper gpsHelper, GetLocation locationInterface) {
+    public MainFeedPresenter(GPSHelper gpsHelper, IMainFeed mainFeed) {
         this.gpsHelper = gpsHelper;
-        this.locationInterface = locationInterface;
-        setGPS();
+        this.mainFeed = mainFeed;
     }
-    interface GetLocation{
+
+    public void addThisLocation() {
+        if (locations == null){
+            locations = new HashSet<>();
+        }
+        if (currentLocation != null && !locations.contains(currentLocation)){
+            locations.add(currentLocation);
+            for (String locale : locations) {
+                Log.d(TAG, "location - presenter " + locale);
+            }
+            mainFeed.locationAdded(currentLocation);
+            mainFeed.addSetToPreferences(locations);
+        }
+    }
+
+    public void setLocation(Set<String> locations) {
+        this.locations = locations;
+    }
+
+    public interface GetLocation{
         void getLocation(String currentLocation);
     }
 
-    private void setGPS() {
-        gpsHelper.getMyLocation();
-        gpsHelper.setLocationInterface(getLocationInterface());
+    public void setGPS(GetLocation locationInterface) {
+        gpsHelper.setLocationInterface(currentLocation -> {
+            MainFeedPresenter.this.currentLocation = currentLocation;
+            locationInterface.getLocation(currentLocation);
+            disconnect();
+        });
+        gpsHelper.startGoogleApiClient();
     }
 
-    private GPSHelper.LocationInterface getLocationInterface() {
-        return currentLocation -> locationInterface.getLocation(currentLocation);
-
+    public String getCurrentLocation(){
+        if (currentLocation!= null) {
+            return currentLocation;
+        }
+        return Constants.NOT_FOUND;
     }
 
     public void disconnect(){

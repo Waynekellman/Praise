@@ -8,9 +8,9 @@ class LoginPresenter {
     private LoginView view;
     LoginValidator validator;
 
-    public LoginPresenter(LoginView loginView) {
+    public LoginPresenter(LoginView loginView, LoginValidator validator) {
         view = loginView;
-        validator = new LoginValidator();
+        this.validator = validator;
 
     }
 

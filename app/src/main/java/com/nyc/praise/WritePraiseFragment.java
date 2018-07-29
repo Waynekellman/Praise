@@ -54,7 +54,7 @@ public class WritePraiseFragment extends Fragment implements ToneValidator {
         }
 
         isPraise = bundle.getBoolean("NewPraise");
-        presentner = new WritePraisePresenter(this);
+        presentner = new WritePraisePresenter(this, new PraiseToneAnalyzer());
 
         if (isPraise) {
             currentLocation = bundle.getString(Constants.LOCATION, "");

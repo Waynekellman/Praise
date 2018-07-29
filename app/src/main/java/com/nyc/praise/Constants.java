@@ -14,4 +14,6 @@ public class Constants {
     public final static String ICON = "icon_shared_key";
     public final static String COLOR = "color_shared_key";
     public final static String NOT_FOUND = "Not Found";
+    public final static String LOCATIONS_SHARED_PREF_KEY = "Locations shared prefs key";
+    public final static String LOCATIONS_KEY = "Locations";
 }

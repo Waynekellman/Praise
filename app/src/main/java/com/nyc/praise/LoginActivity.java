@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(LoginActivity.this, MainScreenActivity.class);
             startActivity(intent);
         }
-        presenter = new LoginPresenter(this);
+        presenter = new LoginPresenter(this, new LoginValidator());
     }
 
     @Override
