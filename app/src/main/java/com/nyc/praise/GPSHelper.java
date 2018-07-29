@@ -47,7 +47,7 @@ public class GPSHelper implements
     public void setLocationInterface(LocationInterface locationInterface) {
         this.locationInterface = locationInterface;
     }
-    public void getMyLocation() {
+    public void startGoogleApiClient() {
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(context)
                     .addConnectionCallbacks(this)
@@ -55,9 +55,7 @@ public class GPSHelper implements
                     .addApi(LocationServices.API)
                     .build();
         }
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
+        mGoogleApiClient.connect();
     }
 
     /**
@@ -76,7 +74,7 @@ public class GPSHelper implements
 
     public String getLocationName() {
 
-        String cityName = "Not Found";
+        String cityName = Constants.NOT_FOUND;
         Geocoder gcd = new Geocoder(context, Locale.getDefault());
         try {
 
@@ -123,6 +121,10 @@ public class GPSHelper implements
             longitude = mLastLocation.getLongitude();
             locationInterface.onSuccessLocation(getLocationName());
         }
+    }
+
+    public void disconnect(){
+        mGoogleApiClient.disconnect();
     }
 
     @Override

@@ -4,21 +4,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, LoginView{
 
     private static final String TAG = "LoginActivity";
     private Button login;
     private EditText userName;
     SharedPreferences sharedPreferences;
     private RadioGroup iconGroup, colorGroup;
+    private LoginPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +34,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(LoginActivity.this, MainScreenActivity.class);
             startActivity(intent);
         }
+        presenter = new LoginPresenter(this, new LoginValidator());
     }
 
     @Override
@@ -42,25 +42,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         int id = view.getId();
         switch (id) {
             case R.id.login:
-                if (checkUserName() && checkIcon() && checkColor()) {
-                    saveIconAndColor();
-                    setUsernameInSharedPrefs();
-                    clearLogin();
-                    Intent intent = new Intent(LoginActivity.this, MainScreenActivity.class);
-                    startActivity(intent);
-                    break;
-                } else {
-                    if (!checkUserName()) {
-                        Toast.makeText(LoginActivity.this, "User name must be 6 characters or more", Toast.LENGTH_SHORT).show();
-                    }
-                    if (!checkIcon()) {
-                        Toast.makeText(LoginActivity.this, "Please Select an Icon", Toast.LENGTH_SHORT).show();
-                    }
-                    if (!checkColor()) {
-                        Toast.makeText(LoginActivity.this, "Please Select a color", Toast.LENGTH_SHORT).show();
-
-                    }
-                }
+                int colorButtonID = colorGroup.getCheckedRadioButtonId();
+                int iconButtonID = iconGroup.getCheckedRadioButtonId();
+                String userNameString = userName.getText().toString();
+                presenter.checkLogin(colorButtonID, iconButtonID, userNameString);
         }
     }
 
@@ -69,16 +54,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         iconGroup.clearCheck();
         userName.setText("");
     }
-
-    private boolean checkColor() {
-
-        return colorGroup.getCheckedRadioButtonId() != -1;
-    }
-
-    private boolean checkIcon() {
-        return iconGroup.getCheckedRadioButtonId() != -1;
-    }
-
     private void saveIconAndColor() {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -123,13 +98,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private boolean checkUserName() {
-        return userName.getText().toString().length() > 5;
-    }
-
     private void setUsernameInSharedPrefs() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(Constants.LOGIN_USERNAME, userName.getText().toString());
         editor.commit();
+    }
+
+    @Override
+    public void navigateToMainScreen() {
+
+        saveIconAndColor();
+        setUsernameInSharedPrefs();
+        clearLogin();
+        Intent intent = new Intent(LoginActivity.this, MainScreenActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void failName() {
+        Toast.makeText(LoginActivity.this, "User name must be 6 characters or more", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void failColor() {
+        Toast.makeText(LoginActivity.this, "Please Select a color", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void failIcon() {
+        Toast.makeText(LoginActivity.this, "Please Select an Icon", Toast.LENGTH_SHORT).show();
+
     }
 }

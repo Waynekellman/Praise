@@ -33,6 +33,7 @@ public class PraiseToneAnalyzer {
                 USERNAME,
                 PASSWORD);
         toneAnalyzer.setEndPoint(URL);
+
     }
 
     public void serviceCall(String text, ToneResponse response) {
